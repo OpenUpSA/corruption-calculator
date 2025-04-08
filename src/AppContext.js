@@ -1,7 +1,6 @@
 import { createContext, use, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
@@ -14,11 +13,11 @@ export const AppProvider = ({ children }) => {
     const fetchNocoDB = async (endpoint) => {
         try {
             const res = await fetch(
-                "https://nocodb.openup.org.za/api/v1/db/data/v1/Corruption Calculator/" + endpoint,
+                process.env.NOCO + endpoint,
                 {
                     headers: {
                         "accept": "application/json",
-                        "xc-token": "f4trU055_qVawiAmA5oxeUiYngnvvwjA9QAF6VhW"
+                        "xc-token": process.env.API_KEY,
                     }
                 }
             );
