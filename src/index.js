@@ -1,21 +1,35 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AppProvider } from './AppContext';
+
+
+
 import './app.scss';
 
-function App() {
-  const [state, setState] = React.useState("Hello, world!");
-  const [counter, setCounter] = React.useState(0); 
+import Header from './Header';
+import Home from './Home';
+import CorruptionCalculator from './Calculator';
+import Footer from './Footer';
 
-  return (
-    <div className="mx-auto max-w-md px-4 py-8">
-      <p>{state}</p>
-      <button onClick={() => setState("Hello, React!")}>Change Text</button>
-      <p>Counter: {counter}</p>
-      <button onClick={() => setCounter(counter + 1)}>Increment</button> 
-    </div>
-  );
+function App() {
+
+	return (
+		<BrowserRouter>
+			<AppProvider>
+				<Header />
+				<main>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/calculator" element={<CorruptionCalculator />} />
+				</Routes>
+				</main>
+				<Footer />
+			</AppProvider>
+		</BrowserRouter>
+	);
 }
 
 const container = document.getElementById('root');
-const root = createRoot(container); 
+const root = createRoot(container);
 root.render(<App />);
