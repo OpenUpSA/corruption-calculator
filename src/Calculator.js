@@ -5,6 +5,8 @@ import { Container, Row, Col, Card, Button, Navbar, Nav, Collapse } from 'react-
 import ReactMarkdown from 'react-markdown';
 
 import ACM from './ACM.png';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSave, faPen } from "@fortawesome/free-solid-svg-icons";
 
 
 export default function CorruptionCalculator() {
@@ -13,6 +15,7 @@ export default function CorruptionCalculator() {
 	const [selectedCase, setSelectedCase] = React.useState(null);
 	const [breakdown, setBreakdown] = React.useState([]);
 	const [sectors, setSectors] = React.useState([]);
+	const [editing, setEditing] = React.useState(false);
 
 
 	useEffect(() => {
@@ -150,7 +153,10 @@ export default function CorruptionCalculator() {
 
 
 									<Col md={5}>
-										<div className="receipt" ref={contentRef}>
+										<div className="receipt mt-5" ref={contentRef}>
+										<div className="edit">
+												<FontAwesomeIcon style={{cursor: 'pointer'}} icon={editing ? faSave : faPen} onClick={() => setEditing(!editing)} />
+											</div>
 											<div className="receipt-header">
 												<h2>{selectedCase.Case}</h2>
 												<span className="fs-4 d-block fw-bold"><span className="fs-6 d-inline-block me-1">R</span><span className="text-secondary">{parseInt(selectedCase.Amount).toLocaleString()}</span></span>
@@ -164,35 +170,43 @@ export default function CorruptionCalculator() {
 											<div className="invoice">
 												{breakdown.map((item, i) => (
 													<div key={i} className="invoice-line align-items-center d-flex justify-content-between gap-3">
-														<Button size="sm" variant="outline-secondary" onClick={() => updateCount(i, -1)}>-</Button>
-														<input
-															type="number"
-															min="0"
-															value={item.count}
-															onChange={(e) => setExactCount(i, parseInt(e.target.value) || 0)}
-															style={{ width: "60px", textAlign: "center" }}
-														/>
-														<Button size="sm" variant="outline-secondary" onClick={() => updateCount(i, 1)}>+</Button>
+														{editing ? (
+															<>
+															<Button size="sm" variant="outline-secondary" onClick={() => updateCount(i, -1)}>-</Button>
+															<input
+																type="number"
+																min="0"
+																value={item.count}
+																onChange={(e) => setExactCount(i, parseInt(e.target.value) || 0)}
+																style={{ width: "60px", textAlign: "center" }}
+															/>
+															<Button size="sm" variant="outline-secondary" onClick={() => updateCount(i, -1)}>-</Button>
+															</>
+														) : (
+															<div className="item-count">{item.count} x </div>
+														)}
 														<span className="item flex-grow-1">
 															<strong>{item.Item}</strong>
 														</span>
 
-														<span>= R{(item.Amount * item.count).toLocaleString()}</span>
-														<Button size="sm" variant="outline-danger" onClick={() => removeItem(i)}>×</Button>
+														<span>R{(item.Amount * item.count).toLocaleString()}</span>
+														{editing && <Button size="sm" variant="outline-danger" onClick={() => removeItem(i)}>×</Button>}
 													</div>
 												))}
 											
-
-												<div className="mt-3 d-flex">
-													<select className="form-select me-2" onChange={e => addItem(e.target.value)}>
-														<option value="">Add item...</option>
-														{items.filter(item =>
-															sectors.includes(item.Sector) && !breakdown.some(b => b.Item === item.Item) 
-															).map((item, i) => (
-																<option key={i} value={item.Item}>{item.Item}</option>
-															))}
-													</select>
-												</div>
+												{
+													editing &&
+														<div className="mt-3 d-flex">
+															<select className="form-select me-2" onChange={e => addItem(e.target.value)}>
+																<option value="">Add item...</option>
+																{items.filter(item =>
+																	sectors.includes(item.Sector) && !breakdown.some(b => b.Item === item.Item) 
+																	).map((item, i) => (
+																		<option key={i} value={item.Item}>{item.Item}</option>
+																	))}
+															</select>
+														</div>
+												}
 
 												<div className="sep"></div>
 
