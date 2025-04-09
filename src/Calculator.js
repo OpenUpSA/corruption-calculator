@@ -12,6 +12,8 @@ export default function CorruptionCalculator() {
 	const { cases, items } = useAppContext();
 	const [selectedCase, setSelectedCase] = React.useState(null);
 	const [breakdown, setBreakdown] = React.useState([]);
+	const [sectors, setSectors] = React.useState([]);
+
 
 	useEffect(() => {
 		console.log(cases);
@@ -29,18 +31,32 @@ export default function CorruptionCalculator() {
 	}, []);
 
 	useEffect(() => {
-		if (selectedCase && items.length > 0) {
-			const initial = calculateItemBreakdown(parseInt(selectedCase.Amount), items);
+		if (selectedCase && items.length > 0 && sectors.length > 0) {
+
+			let sector_items = items.filter(item => sectors.includes(item.Sector));
+
+			const initial = calculateItemBreakdown(parseInt(selectedCase.Amount), sector_items);
+
 			setBreakdown(initial);
 		}
-	}, [selectedCase, items]);
+	}, [sectors]);
 
 
 	useEffect(() => {
 		console.log(selectedCase);
+		if (selectedCase) {
+			let case_sectors = selectedCase.Sector.includes(",") ? selectedCase.Sector.split(",") : [selectedCase.Sector];
+			setSectors(case_sectors);
+		}
 	}, [selectedCase]);
 
+	useEffect(() => {
+		console.log(items);
+	}, [items]);
 
+	useEffect(() => {
+		console.log(sectors);
+	}, [sectors]);
 
 
 	const contentRef = useRef(null);
@@ -58,9 +74,9 @@ export default function CorruptionCalculator() {
 		document.body.removeChild(link);
 	};
 
-	function calculateItemBreakdown(total, items) {
+	function calculateItemBreakdown(total, sector_items) {
 		let remaining = total;
-		const itemCounts = items.map(item => ({ ...item, count: 0 }));
+		const itemCounts = sector_items.map(item => ({ ...item, count: 0 }));
 
 		let keepGoing = true;
 		while (keepGoing) {
@@ -107,6 +123,11 @@ export default function CorruptionCalculator() {
 		  return updated.filter(i => i.count > 0);
 		});
 	  }
+
+	function balanced_receipt() {
+		const total = breakdown.reduce((acc, item) => acc + (item.Amount * item.count), 0);
+		return total === parseInt(selectedCase.Amount);
+	}
 
 	return (
 		<>
@@ -165,9 +186,11 @@ export default function CorruptionCalculator() {
 												<div className="mt-3 d-flex">
 													<select className="form-select me-2" onChange={e => addItem(e.target.value)}>
 														<option value="">Add item...</option>
-														{items.map((item, i) => (
-															<option key={i} value={item.Item}>{item.Item}</option>
-														))}
+														{items.filter(item =>
+															sectors.includes(item.Sector) && !breakdown.some(b => b.Item === item.Item) 
+															).map((item, i) => (
+																<option key={i} value={item.Item}>{item.Item}</option>
+															))}
 													</select>
 												</div>
 
@@ -175,7 +198,7 @@ export default function CorruptionCalculator() {
 
 												<div className="receipt-total d-flex justify-content-between">
 													<strong>Total</strong>
-													<span className="fs-4 d-block fw-bold"><span className="fs-6 d-inline-block me-1">R</span><span className="text-secondary">{breakdown.reduce((acc, item) => acc + (item.Amount * item.count), 0).toLocaleString()}</span></span>
+													<span className="fs-4 d-block fw-bold"><span className="fs-6 d-inline-block me-1">R</span><span className={`${!balanced_receipt() ? 'text-alert' : 'text-secondary'}`}>{breakdown.reduce((acc, item) => acc + (item.Amount * item.count), 0).toLocaleString()}</span></span>
 												</div>
 
 												<div className="sep"></div>
@@ -188,8 +211,8 @@ export default function CorruptionCalculator() {
 
 
 										</div>
-
-										<Button size="lg" variant="primary" className="mt-5" onClick={captureImage}>Download Receipt</Button>
+										
+										<Button size="lg" disabled={!balanced_receipt()} variant="primary" className="mt-5" onClick={captureImage}>Download Receipt</Button>
 
 									</Col>
 
