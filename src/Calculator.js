@@ -180,7 +180,7 @@ export default function CorruptionCalculator() {
 																onChange={(e) => setExactCount(i, parseInt(e.target.value) || 0)}
 																style={{ width: "60px", textAlign: "center" }}
 															/>
-															<Button size="sm" variant="outline-secondary" onClick={() => updateCount(i, -1)}>-</Button>
+															<Button size="sm" variant="outline-secondary" onClick={() => updateCount(i, +1)}>+</Button>
 															</>
 														) : (
 															<div className="item-count">{item.count} x </div>
