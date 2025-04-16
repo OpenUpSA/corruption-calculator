@@ -32,7 +32,9 @@ export default function Header() {
 								<Col sm={8} md={7}>
 									<h4>About</h4>
 									<p className="text-white">
-										The corruption calculator...
+									<p>KleptoCalc is a powerful online tool designed to expose the real social cost of corruption. It transforms financial crimes into clear, compelling infographics that show exactly what communities lose when public funds are stolen—schools, hospitals, clean water, and more.</p>
+<p>With verified facts and figures, KleptoCalc empowers activists and citizens alike to understand, share, and act. By entering known corruption cases, users generate visual evidence they can use to educate, mobilize, launch petitions, demand accountability, and track progress.</p>
+<p>KleptoCalc turns outrage into action—arming the fight against corruption with data and truth.</p>
 									</p>
 								</Col>
 								<Col sm={4} md={{ span: 4, offset: 1 }}>
