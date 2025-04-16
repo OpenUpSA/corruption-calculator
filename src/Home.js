@@ -26,13 +26,12 @@ export default function Home() {
 					
 					<h1 className="jumbotron-heading text-uppercase mb-5"><FontAwesomeIcon icon={faReceipt} className="me-2"/> <strong>KLEPTO</strong>CALC</h1>
 					<h2>Calculating the cost of corruption</h2>
-					<p className="lead text-muted">
-						Use this to...
+					<p className="lead mt-4">
+					<p>KleptoCalc is a powerful online tool designed to expose the real social cost of corruption. It transforms financial crimes into clear, compelling infographics that show exactly what communities lose when public funds are stolen—schools, hospitals, clean water, and more.</p>
+<p>With verified facts and figures, KleptoCalc empowers activists and citizens alike to understand, share, and act. By entering known corruption cases, users generate visual evidence they can use to educate, mobilize, launch petitions, demand accountability, and track progress.</p>
+<p>KleptoCalc turns outrage into action—arming the fight against corruption with data and truth.</p>
 					</p>
-					<p className="mt-5">
-						<Button variant="secondary" onClick={() => navigate("/calculator")}>New Case</Button>
-						
-					</p>
+					
 				</Container>
 			</section>
 
